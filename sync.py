@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
 BASE = "https://cauc.bysjy.com.cn"
 OUT = Path("docs/events.json")
@@ -95,6 +95,9 @@ def main():
                     home.goto(BASE,wait_until="domcontentloaded")
                     home.wait_for_timeout(1600)
                     links={u:t for t,u in home.evaluate(LINKS) if t and detail_id(u,kind)}
+                except PlaywrightTimeoutError as exc:
+                    print("就业网首页读取超时，跳过当前栏目", tag, str(exc)[:220])
+                    continue
                 finally:
                     home.close()
             for url,title in links.items():
