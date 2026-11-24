@@ -34,7 +34,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-            - name: 等待 GitHub 能查到本次发布包
+      - name: 等待 GitHub 能查到本次发布包
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
