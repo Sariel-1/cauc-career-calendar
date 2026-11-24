@@ -114,7 +114,10 @@ def main():
                     events.pop(ident,None)
         browser.close()
     if not handled:
-        raise SystemExit("未获取可核实数据，保留上次版本")
+        if events:
+            print("::warning::本次未核实到场次，网页使用上次保存的数据")
+            return
+        raise SystemExit("本次未核实到场次，也没有可供发布的历史数据")
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(sorted(events.values(),key=lambda e:(e["date"],e["startTime"],e["id"])),ensure_ascii=False,indent=2),encoding="utf8")
 
